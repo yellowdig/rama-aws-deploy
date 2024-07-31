@@ -12,6 +12,7 @@ variable "key_name" { type = string }     # from ~/.rama/auth.tfvars
 # From rama.tfvars
 variable "username" { type = string }
 variable "vpc_security_group_ids" { type = list(string) }
+variable "subnet_id" { type = string }
 
 variable "rama_source_path" { type = string }
 variable "license_source_path" { type = string }
@@ -73,7 +74,7 @@ locals {
   vpc_security_group_ids = var.vpc_security_group_ids
   #vpc_security_group_ids = [module.vpc.default_security_group_id]
   #vpc_id                 = module.vpc.vpc_id
-  #subnet_id              = module.vpc.public_subnets[0]
+  subnet_id              = var.subnet_id
 }
 
 ###
@@ -94,7 +95,7 @@ data "http" "myip" {
 resource "aws_instance" "zookeeper" {
   ami           = var.zookeeper_ami_id
   instance_type = var.zookeeper_instance_type
-  # subnet_id              = local.subnet_id
+  subnet_id              = local.subnet_id
   vpc_security_group_ids = local.vpc_security_group_ids
   key_name               = var.key_name
   count                  = var.zookeeper_num_nodes
@@ -168,7 +169,7 @@ data "cloudinit_config" "conductor_config" {
 resource "aws_instance" "conductor" {
   ami           = var.conductor_ami_id
   instance_type = var.conductor_instance_type
-  #subnet_id              = local.subnet_id
+  subnet_id              = local.subnet_id
   vpc_security_group_ids = local.vpc_security_group_ids
   key_name               = var.key_name
 
@@ -259,7 +260,7 @@ resource "aws_instance" "supervisor" {
   ami           = var.supervisor_ami_id
   count         = var.supervisor_num_nodes
   instance_type = var.supervisor_instance_type
-  #subnet_id              = local.subnet_id
+  subnet_id              = local.subnet_id
   vpc_security_group_ids = local.vpc_security_group_ids
   key_name               = var.key_name
 
