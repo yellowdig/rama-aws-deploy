@@ -190,7 +190,7 @@ resource "aws_instance" "conductor" {
 
   provisioner "local-exec" {
     when    = create
-    command = "./upload_rama.sh ${var.rama_source_path} ${var.username} ${var.use_private_ip ? self.private_ip : self.public_ip}"
+    command = "./upload_rama.sh ${var.private_ssh_key} ${var.rama_source_path} ${var.username} ${var.use_private_ip ? self.private_ip : self.public_ip}"
   }
 
   provisioner "remote-exec" {
