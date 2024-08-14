@@ -188,9 +188,18 @@ resource "aws_instance" "conductor" {
     inline = ["ls"]
   }
 
-  provisioner "file" {
-    source = var.rama_source_path
-    destination = "/home/${var.username}/rama.zip"
+  # provisioner "file" {
+  #   source = var.rama_source_path
+  #   destination = "/home/${var.username}/rama.zip"
+  # }
+
+  # TODO
+  # local scp upload to ap-southeast-2 was timing out and causing incomplete files to go up to the server
+  # this instead pulls it down from s3
+  provisioner "remote-exec" {
+    inline = [
+      "wget https://yellowdig-dev.s3.amazonaws.com/rama-dist/releases/rama-0.18.0.zip -O /home/${var.username}/rama.zip",
+    ]
   }
 
   provisioner "remote-exec" {
