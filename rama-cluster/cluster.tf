@@ -188,9 +188,9 @@ resource "aws_instance" "conductor" {
     inline = ["ls"]
   }
 
-  provisioner "local-exec" {
-    when    = create
-    command = "./upload_rama.sh ${var.private_ssh_key} ${var.rama_source_path} ${var.username} ${var.use_private_ip ? self.private_ip : self.public_ip}"
+  provisioner "file" {
+    source = var.rama_source_path
+    destination = "/home/${var.username}/rama.zip"
   }
 
   provisioner "remote-exec" {
